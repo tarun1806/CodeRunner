@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CodePlayer</title>
+    <script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+
+    <style type="text/css">
+
+    body{
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    #header{
+      width: 100%;
+      background-color: #EEEEEE;
+      height: 40px;
+    }
+    #logo{
+      float: left;
+      font-size: 30px;
+      font-weight: bold;
+      margin: 2px;
+      padding: 2px;
+      width: 0;
+      height:0;
+    }
+    #buttonContainer{
+      width: 350px;
+      margin: 0 auto;
+
+    }
+    .toggleButton{
+      padding: 1px;
+      float: left;
+    }
+    .button{
+      border-top-left-radius: 1px solid;
+      font-family: cursive;
+      font-size: 20px;
+    }
+    .active{
+      background-color: grey;
+    }
+    .hightlighted{
+      background-color: grey;
+    }
+    textarea{
+      resize: none;
+    }
+    .panel{
+      float: left;
+      border-top: none;
+      border-bottom: none;
+      width: 33%;
+      border-left: none;
+    }
+    iframe{
+      border-left: none;
+    }
+    .hidden{
+      display: none;
+    }
+    </style>
+
+  </head>
+
+  <body>
+    <div id="header">
+      <div id="logo">
+      CodePlayer
+      </div>
+      <div id="buttonContainer">
+        <div class="toggleButton">
+          <button class="button active" id="html">HTML</button>
+        </div>
+        <div class="toggleButton">
+          <button class="button active" id="css">CSS</button>
+        </div>
+        <div class="toggleButton">
+          <button class="button" id="javascript">Javascript</button>
+        </div>
+        <div class="toggleButton">
+          <button class="button active" id="output">Output</button>
+        </div>
+      </div>
+    </div>
+    <div id="textContainer">
+      <textarea id="htmlTextArea" class="panel"><p id="para">Enter your html body in HTML,css style in CSS and javascript in Javascript as shown</p></textarea>
+      <textarea id="cssTextArea" class="panel">p{color:red;font-size:30px}</textarea>
+      <textarea id="javascriptTextArea" class="panel hidden">document.getElementById("para").style.fontWeight="700";</textarea>
+      <iframe id="outputTextArea" class="panel"></iframe>
+    </div>
+    <script type="text/javascript">
+    function updateOutput(){
+      $("iframe").contents().find("html").html("<html><head><style type='text/css'>"
+       + $("#cssTextArea").val() + "</style></head><body>" + $("#htmlTextArea").val() + "</body></html>");
+       document.getElementById("outputTextArea").contentWindow.eval($("#javascriptTextArea").val());
+    }
+
+    $(".button").hover(function(){
+      $(this).addClass("hightlighted");
+    },function(){
+      $(this).removeClass("hightlighted");
+    });
+    $(".button").click(function(){
+      $(this).toggleClass("active");
+      $(this).removeClass("hightlighted");
+      var textareaid = $(this).attr("id")+"TextArea";
+      $("#"+textareaid).toggleClass("hidden");
+      var noOfActivePanels = 4-$(".hidden").length;
+      $(".panel").width(($(window).width()/noOfActivePanels)-10);
+    });
+
+    $(".panel").height($(window).height()-$("#header").height()-5);
+    updateOutput();
+    $("textarea").on('change keyup paste',function(){
+      updateOutput();
+      });
+    </script>
+
+  </body>
+</html>
